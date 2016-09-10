@@ -1,0 +1,14 @@
+{
+  "username": null,
+  "clientToken": null,
+  "server": "http://beta.randomapi.com",
+  "port": 61337,
+  "generators": {
+    "count": 1,
+    "execTime": 60,
+    "results": 100000,
+    "localTTL": 900,
+    "localCache": 100,
+    "localSnippetTTL": 900
+  }
+}
