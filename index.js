@@ -32,6 +32,7 @@ Commands:
    ls                                View available local APIs
    login                             Login and link your machine with your RandomAPI account using an authToken
    logout                            Logout off your RandomAPI account
+   restart                           Restart OfflineAPI Server
    run [list # OR ref #] [options]   Alias for gen
    start                             Start OfflineAPI Server
    status                            View status of OfflineAPI Server

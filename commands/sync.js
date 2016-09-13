@@ -93,8 +93,7 @@ Remote Lists:    ${body.lists.length}\t${body.listSize}\n`);
               }
             ], () => {
               console.log('\nSync finished...restarting OfflineAPI server.');
-              require(utils.lodir('./commands/stop')).run();
-              require(utils.lodir('./commands/start')).run();
+              utils.restart();
             });
           });
         });

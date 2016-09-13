@@ -101,13 +101,14 @@ let fingerprint = () => {
 
 let getDB = () => db;
 
-let stopServer = () => {
+let stopServer = (cb = () => {}) => {
   request(`http://localhost:${getConfig().port}/shutdown`, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       success("Shutting down OfflineAPI Server.");
     } else {
       warning("No response received from server...maybe it is already shutdown?");
     }
+    cb();
   });
 };
 
@@ -117,7 +118,7 @@ let checkServer = cb => {
   });
 };
 
-let startServer = () => {
+let startServer = (cb = () => {}) => {
   checkServer(res => {
     if (res) {
       warning("Server appears to be online already.");
@@ -125,7 +126,12 @@ let startServer = () => {
       spawn('node', [lodir('api', 'server')]);
       success(`Starting OfflineAPI Server on port ${getConfig().port}.`);
     }
+    cb();
   });
+};
+
+let restart = () => {
+  stopServer(startServer);
 };
 
 loadDB();
@@ -146,4 +152,5 @@ module.exports.success     = success;
 module.exports.fingerprint = fingerprint;
 module.exports.startServer = startServer;
 module.exports.stopServer  = stopServer;
+module.exports.restart     = restart;
 module.exports.checkServer = checkServer;
