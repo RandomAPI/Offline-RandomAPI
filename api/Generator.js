@@ -501,10 +501,10 @@ Generator.prototype.require = function(signature) {
   }
 
   // Check if snippet is in local snippet cache
-  if (obj in this.snippetCache) {
+  if (signature in this.snippetCache) {
     // Update local snippet cache lastUsed date
-    this.snippetCache[obj].lastUsed = new Date().getTime();
-    return this.snippetCache[obj].snippet;
+    this.snippetCache[signature].lastUsed = new Date().getTime();
+    return this.snippetCache[signature].snippet;
   } else {
 
     let done = false;
@@ -520,7 +520,7 @@ snippet = `(function() {
   return snippet;
 })()`;
 
-        this.snippetCache[obj] = {
+        this.snippetCache[signature] = {
           added: new Date().getTime(),
           snippet,
           size: 0,
