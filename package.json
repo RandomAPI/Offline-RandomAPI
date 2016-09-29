@@ -1,6 +1,6 @@
 {
   "name": "randomapi",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Offline RandomAPI",
   "scripts": {
     "postinstall": "node stopServer && node startServer",
