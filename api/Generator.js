@@ -636,7 +636,7 @@ Generator.prototype.returnResults = function(err, output, cb) {
         cb(null, csv, 'csv');
       });
     } else if (this.format === 'raw') {
-      cb(null, JSON.stringify(json.results), 'json');
+      cb(null, json.results, 'txt');
     } else if (this.format === 'prettyraw') {
       cb(null, JSON.stringify(json.results, null, 2), 'json');
     } else {
