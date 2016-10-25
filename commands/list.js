@@ -1,5 +1,4 @@
-const request = require('request');
-const utils   = require('../utils');
+const utils = require('../utils');
 
 let config = utils.getConfig();
 

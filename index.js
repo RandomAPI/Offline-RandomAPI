@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-const path    = require('path');
-const fs      = require('fs.extra');
-const color   = require('colors');
-const request = require('request');
-const utils   = require('./utils.js');
-const pack    = require('./package.json');
+const path  = require('path');
+const fs    = require('fs.extra');
+const color = require('colors');
+const utils = require('./utils.js');
+const pack  = require('./package.json');
 
 let args   = process.argv.slice(2);
 let config = utils.getConfig();
@@ -49,10 +48,15 @@ fs.readdirSync(utils.lodir('commands')).forEach(file => {
   cmds.push(file.slice(0, -3));
 });
 
+// Convert old server address to https
+if (config.server === 'http://beta.randomapi.com') {
+  let cmd = require(utils.lodir('commands', 'config'));
+  cmd.run(['config', 'server', 'https://beta.randomapi.com']);
+}
+
 if (cmds.indexOf(args[0]) !== -1) {
   let filename = utils.lodir('commands', args[0]);
   let cmd = require(filename);
-
   cmd.run(args);
 } else {
   utils.error('randomapi: \'' + args[0] + '\' is not a randomapi command. See \'randomapi --help\'');

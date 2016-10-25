@@ -1,10 +1,10 @@
-const path     = require('path');
-const fs       = require('fs.extra');
-const color    = require('colors');
-const request  = require('request');
-const prompt   = require('prompt');
-const utils    = require('../utils');
-const pack     = require('../package.json');
+const path    = require('path');
+const fs      = require('fs.extra');
+const color   = require('colors');
+const request = require('request');
+const prompt  = require('prompt');
+const utils   = require('../utils');
+const pack    = require('../package.json');
 
 let config = utils.getConfig();
 

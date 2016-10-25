@@ -1,8 +1,7 @@
-const request = require('request');
-const async   = require('async');
-const _       = require('lodash');
-const Table   = require('cli-table');
-const utils   = require('../utils');
+const async = require('async');
+const _     = require('lodash');
+const Table = require('cli-table');
+const utils = require('../utils');
 let db = utils.getDB();
 
 let config = utils.getConfig();
