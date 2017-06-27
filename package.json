@@ -1,6 +1,6 @@
 {
   "name": "randomapi",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Offline RandomAPI",
   "scripts": {
     "postinstall": "node stopServer && node startServer",
@@ -37,7 +37,7 @@
     "colors": "^1.1.2",
     "compression": "^1.6.2",
     "cors": "^2.8.0",
-    "daemon": "^1.1.0",
+    "daemon": "github:randomapi/daemon.node#48d0977c26fb3a6a44ae99aae3471b9d5a761085",
     "deasync": "^0.1.7",
     "deity": "^0.2.0",
     "express": "^4.14.0",
