@@ -26,6 +26,7 @@ module.exports.run = function(args) {
         utils.error("Invalid token!");
       } else if (response.statusCode === 404) {
         utils.warning("Received unexpected response from server. Please verify server endpoint in ~/.randomapi.json");
+        utils.error(body);
       } else {
         utils.emptyDB(() => {
           utils.deleteFiles(() => {

@@ -11,6 +11,7 @@ const path         = require('path');
 const _            = require('lodash');
 const redis        = require('./utils').redis;
 const numeral      = require('numeral')
+const esprima      = require('esprima');
 const Promise      = require('bluebird').Promise;
 const EventEmitter = require('events').EventEmitter;
 
@@ -255,6 +256,10 @@ ${this.src}
         function getVar(key) {
           return key in _APIgetVars ? _APIgetVars[key] : null;
         }
+        function _APIeval(src) {
+          if (typeof src === "string") return eval(src);
+          else return src
+        }
       `);
 
       this.sandBox.runInContext(this.context, {
@@ -454,7 +459,7 @@ Generator.prototype.availableFuncs = function() {
         };
         return self.globs[lib];
       } else {
-        throw new Error(`Global snippet ${lib} was not found`);
+        return self.require(lib);
       }
     }
   };
@@ -488,7 +493,11 @@ Generator.prototype.availableFuncs = function() {
 Generator.prototype.require = function(signature) {
   if (signature === undefined || signature.length === 0) {
     throw new Error(`No snippet signature provided`);
-    return;
+    return undefined;
+  }
+
+  if (signature.indexOf('~') === 0) {
+    signature = utils.getUsername() + '/' + signature.slice(1);
   }
 
   let tmp = signature.split('/');
@@ -511,6 +520,11 @@ Generator.prototype.require = function(signature) {
     let contents = null;
 
     db.require.findAsync(obj).then(doc => {
+      if (doc.length === 0) {
+        done = true;
+        contents = {text: `Snippet signature ${signature} wasn't recognized`};
+        return;
+      }
       doc = doc[0];
 
       fs.readFile(path.join(utils.getHome(), '.randomapi', 'data', 'require', `${doc.ref}-${doc.version}.snippet`), 'utf8', (err, snippet) => {
@@ -534,6 +548,9 @@ snippet = `(function() {
       });
     });
     require('deasync').loopWhile(function(){return !done;});
+    if (typeof contents === "object") {
+      throw new Error(contents.text);
+    }
     return contents;
   }
 };
@@ -577,33 +594,17 @@ Generator.prototype.emptySnippetCache = function() {
 
 // Only global snippets can be required in other snippets
 Generator.prototype.updateRequires = function() {
+  let self = this;
 
   return new Promise((resolve, reject) => {
-    // Don't let snippets include other snippets
-    if (this.mode === 'snippet') resolve();
-    else {
-      let rawMatches = this.src.match(/require\((?:["'`]([A-z0-9]*\/[a-zA-Z0-9 _\-\.+\[\]\{\}\(\)]*(?:\/[0-9]*?)?|~.[a-zA-Z0-9 _\-\.+\[\]\{\}\(\)]*(?:\/[0-9]*?)?)["'`]\))/g);
-      let index = 0;
-
-      try {
-        // There are matches
-        if (rawMatches !== null) {
-          let reg = new RegExp(/require\((?:["'`]([A-z0-9]*\/[a-zA-Z0-9 _\-\.+\[\]\{\}\(\)]*(?:\/[0-9]*?)?|~.[a-zA-Z0-9 _\-\.+\[\]\{\}\(\)]*(?:\/[0-9]*?)?)["'`]\))/g);
-          let match = reg.exec(this.src);
-          while (match !== null) {
-            let result = (match[1] || match[2]).trim();
-            if (result.indexOf('~') === 0) {
-              result = utils.getUsername() + '/' + result.slice(1);
-            }
-            this.src = this.src.replace(rawMatches[index++], this.require(result));
-            match = reg.exec(this.src);
-          }
-        }
-      } catch(e) {
-        reject(e);
+    let requireCount = 0;
+    esprima.parse(this.src, {comment: true, range: true}, (node, meta) => {
+      if (node.type === "CallExpression" && node.callee.name === "require" && self.globRequires.indexOf(node.arguments[0].value) === -1) {
+        this.src = this.src.slice(0, node.range[0]+requireCount*10) + "_APIeval(" + this.src.slice(node.range[0]+requireCount*10, node.range[1]+requireCount*10) + ")" + this.src.slice(node.range[1]+requireCount*10);
+        requireCount++;
       }
-      resolve();
-    }
+    });
+    resolve();
   });
 };
 
@@ -660,7 +661,7 @@ Generator.prototype.returnResults = function(err, output, cb) {
       parseStack = err.stack.split('\n').slice(0, 2).join('').match(/evalmachine.*?:(\d+)(?::(\d+))?/);
       let line = parseStack[1]-14;
       let col  = parseStack[2];
-      if (line <= 0) {
+      if (line < 0) {
         err.error = "SyntaxError: Unexpected end of input";
       }
 
