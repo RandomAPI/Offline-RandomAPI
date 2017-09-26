@@ -48,10 +48,10 @@ fs.readdirSync(utils.lodir('commands')).forEach(file => {
   cmds.push(file.slice(0, -3));
 });
 
-// Convert old server address to https
-if (config.server === 'http://beta.randomapi.com') {
+// Convert old server address to https and beta to non-beta
+if (config.server === 'http://beta.randomapi.com' || config.server === 'https://beta.randomapi.com') {
   let cmd = require(utils.lodir('commands', 'config'));
-  cmd.run(['config', 'server', 'https://beta.randomapi.com']);
+  cmd.run(['config', 'server', 'https://randomapi.com']);
 }
 
 if (cmds.indexOf(args[0]) !== -1) {
