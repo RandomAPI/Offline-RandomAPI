@@ -1,7 +1,7 @@
 {
   "username": null,
   "clientToken": null,
-  "server": "https://beta.randomapi.com",
+  "server": "https://randomapi.com",
   "port": 61337,
   "generators": {
     "count": 1,

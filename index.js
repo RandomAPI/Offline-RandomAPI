@@ -15,7 +15,7 @@ if (!args.length || args[0] === '--help' || args[0] === 'help') {
 
 *Requires a premium plan on RandomAPI*
 How to use:
-   1. Create a new authToken at http://beta.randomapi.com/settings/offline#new
+   1. Create a new authToken at https://randomapi.com/settings/offline#new
    2. Login with your username and authToken to link this machine to your account.
    3. Run the sync operation to synchronize your APIs, lists, and snippets with the RandomAPI server.
    4. Run the ls command to view locally available APIs

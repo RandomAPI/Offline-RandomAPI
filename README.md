@@ -2,11 +2,11 @@
 
 *This cli-tool requires a premium plan on RandomAPI*
 
-*Please visit http://beta.randomapi.com to register*
+*Please visit https://randomapi.com to register*
 
 ##### Detailed tutorial: http://blog.randomapi.com/offline-randomapi/
 ### How to use:
-   1. Create a new authToken at http://beta.randomapi.com/settings/offline#new
+   1. Create a new authToken at https://randomapi.com/settings/offline#new
    2. Login with your username and authToken to link this machine to your account.
    3. Run the `sync` operation to synchronize your APIs, lists, and snippets with the RandomAPI server.
    4. Run the `ls` command to view locally available APIs
@@ -30,4 +30,4 @@ Commands:
    stop                              Stop OfflineAPI Server
    sync                              Synchronize your local APIs with the RandomAPI server
    verify                            Verify your login authToken is valid
-   ```
+```
