@@ -339,7 +339,7 @@ Generator.prototype.availableFuncs = function() {
 
       else if (Array.isArray(obj)) {
         if (num < 0 || num > obj.length-1) {
-          throw new Error(`Index ${num} is out of range for array ${obj}`);
+          throw new Error(`Index ${num} is out of range for array.`);
         } else {
           if (num !== undefined) {
             return obj[num];
@@ -347,9 +347,22 @@ Generator.prototype.availableFuncs = function() {
             return obj[range(0, obj.length-1)];
           }
         }
-      } else {
-        // Check if list is in local generator cache
-        // If not, fetch from redis cache and add it to the local cache
+      } else if (typeof obj === "object") {
+        let keys = Object.keys(obj);
+
+        if (num < 0 || num > keys.length-1) {
+          throw new Error(`Index ${num} is out of range for object.`);
+        } else {
+          if (num !== undefined) {
+            return keys[num];
+          } else {
+            return keys[range(0, keys.length-1)];
+          }
+        }
+      } else if (typeof obj === "string") {
+        if (this.mode === 'snippet') throw new Error(`Lists are not available in Snippets; only inline lists are allowed`);
+        // Check if list is in local generator list cache
+        // If not, fetch from redis cache and add it to the local list cache
         if (obj in this.cache) {
 
           // Update local cache lastUsed date
